@@ -1,14 +1,17 @@
 package br.com.db.sistema.votacao.v1.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table( name = "vote" )
+@Table( name = "tb_vote" )
 public class Vote
 {
     @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long id;
     private Agenda agenda;
     private Associate associate;

@@ -1,18 +1,33 @@
 package br.com.db.sistema.votacao.v1.model;
 
+import org.hibernate.validator.constraints.br.CPF;
+
+import br.com.db.sistema.votacao.v1.enums.AssociateStatusEnum;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table( name = "associate" )
+@Table( name = "tb_associate" )
 public class Associate
 {
     @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long id;
+
     private String name;
+
+    @Column( length = 14 )
+    @CPF( message = "Insira um CPF válido!" )
     private String cpf;
-    private String status;
+    
+    @Enumerated(EnumType.STRING)
+    private AssociateStatusEnum associateStatusEnum;
 
     public Long getId() 
     {
@@ -44,13 +59,13 @@ public class Associate
         this.cpf = cpf;
     }
 
-    public String getStatus() 
+    public AssociateStatusEnum getStatus() 
     {
-        return status;
+        return associateStatusEnum;
     }
 
-    public void setStatus( String status ) 
+    public void setStatus( AssociateStatusEnum associateStatusEnum ) 
     {
-        this.status = status;
+        this.associateStatusEnum = associateStatusEnum;
     }
 }
