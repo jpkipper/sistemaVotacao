@@ -1,9 +1,16 @@
 package br.com.db.sistema.votacao.v1.model;
 
+import br.com.db.sistema.votacao.v1.enums.VoteEnum;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -13,9 +20,18 @@ public class Vote
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long id;
+
+    @OneToOne
+    @JoinColumn( name = "agenda_id", nullable = false )
     private Agenda agenda;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn( name = "associate_id", nullable = false )
     private Associate associate;
-    private String value;
+
+    @Column( nullable = false )
+    @Enumerated( EnumType.STRING )
+    private VoteEnum value;
 
     public Long getId() 
     {
@@ -47,12 +63,12 @@ public class Vote
         this.associate = associate;
     }
 
-    public String getValue() 
+    public VoteEnum getValue() 
     {
         return value;
     }
 
-    public void setValue( String value ) 
+    public void setValue( VoteEnum value ) 
     {
         this.value = value;
     }

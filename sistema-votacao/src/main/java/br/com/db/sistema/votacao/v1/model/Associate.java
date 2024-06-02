@@ -20,13 +20,14 @@ public class Associate
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long id;
 
+    @Column( nullable = false )
     private String name;
 
     @Column( length = 14 )
     @CPF( message = "Insira um CPF válido!" )
     private String cpf;
     
-    @Enumerated(EnumType.STRING)
+    @Enumerated( EnumType.STRING )
     private AssociateStatusEnum associateStatusEnum;
 
     public Long getId() 

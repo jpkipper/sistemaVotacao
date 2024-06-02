@@ -31,3 +31,17 @@ CREATE TABLE tb_vote
     FOREIGN KEY (agenda_id) REFERENCES agenda (id),
     FOREIGN KEY (associate_id) REFERENCES associate (id)
 );
+
+CREATE TABLE assembly_agenda
+(
+    assembly_id  bigint NOT NULL REFERENCES assembly (id) ON DELETE CASCADE,
+    agenda_id    bigint NOT NULL REFERENCES agenda (id) ON DELETE CASCADE,
+    PRIMARY KEY (assembly_id, agenda_id)
+);
+
+CREATE TABLE agenda_votation
+(
+    agenda_id  bigint NOT NULL REFERENCES agenda (id) ON DELETE CASCADE,
+    votes_id   bigint NOT NULL REFERENCES vote (id) ON DELETE CASCADE,
+    PRIMARY KEY (agenda_id, votes_id)
+);
