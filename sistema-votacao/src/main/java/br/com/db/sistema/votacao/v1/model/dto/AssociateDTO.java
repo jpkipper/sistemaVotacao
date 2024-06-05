@@ -1,6 +1,6 @@
-package br.com.db.sistema.votacao.v1.dto;
+package br.com.db.sistema.votacao.v1.model.dto;
 
-import br.com.db.sistema.votacao.v1.enums.AssociateStatusEnum;
+import br.com.db.sistema.votacao.v1.model.enums.AssociateStatusEnum;
 
 public class AssociateDTO
 {

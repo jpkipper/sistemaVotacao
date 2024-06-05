@@ -1,4 +1,4 @@
-package br.com.db.sistema.votacao.v1.enums;
+package br.com.db.sistema.votacao.v1.model.enums;
 
 public enum AssociateStatusEnum 
 {

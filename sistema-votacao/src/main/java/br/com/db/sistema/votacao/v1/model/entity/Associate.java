@@ -1,8 +1,8 @@
-package br.com.db.sistema.votacao.v1.model;
+package br.com.db.sistema.votacao.v1.model.entity;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import br.com.db.sistema.votacao.v1.enums.AssociateStatusEnum;
+import br.com.db.sistema.votacao.v1.model.enums.AssociateStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

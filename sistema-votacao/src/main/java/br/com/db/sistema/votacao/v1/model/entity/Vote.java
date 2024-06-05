@@ -1,6 +1,6 @@
-package br.com.db.sistema.votacao.v1.model;
+package br.com.db.sistema.votacao.v1.model.entity;
 
-import br.com.db.sistema.votacao.v1.enums.VoteEnum;
+import br.com.db.sistema.votacao.v1.model.enums.VoteEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
