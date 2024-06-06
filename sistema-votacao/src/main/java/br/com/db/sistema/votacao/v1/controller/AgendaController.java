@@ -24,7 +24,7 @@ public class AgendaController
     @PostMapping
     public ResponseEntity<String> createAgenda( @RequestBody AgendaDTO agendaDTO )
     {
-        try 
+        try
         {
             agendaService.createAgenda( agendaDTO );
             return ResponseEntity.ok( "Agenda created successfully" );

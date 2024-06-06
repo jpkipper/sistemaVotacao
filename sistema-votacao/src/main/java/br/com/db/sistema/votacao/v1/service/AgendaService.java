@@ -61,7 +61,7 @@ public class AgendaService
 
         return agendas.stream()
             .map(this::convertToAgendaDTO)
-            .collect(Collectors.toList());  
+            .collect(Collectors.toList());
     }
 
     protected Agenda save( Agenda agenda )
