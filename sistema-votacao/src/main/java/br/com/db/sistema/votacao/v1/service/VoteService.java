@@ -34,10 +34,7 @@ public class VoteService
 
         hasVoted( associate.getId(), agenda.getId() );
 
-        Vote vote = new Vote();
-        vote.setValue( voteDTO.getStatus() );
-        vote.setAgenda( agenda );
-        vote.setAssociate( associate );
+        Vote vote = new Vote( voteDTO, associate, agenda );
 
         voteRepository.save( vote );
         agenda.getVotes().add( vote );
@@ -49,7 +46,7 @@ public class VoteService
         cpfValidator.isCPFValid( cpf );
         Associate associate = associateService.findAssociate(cpf);
 
-        if( associate.getStatus().getValue().equals( AssociateStatusEnum.ABLE_TO_VOTE ) )
+        if( associate.getAssociateStatusEnum().getValue().equals( AssociateStatusEnum.ABLE_TO_VOTE ) )
             return associate;
 
         throw new Exception( "Associate " + associate.getName() + " with CPF = " + cpf + " cannot vote!" );

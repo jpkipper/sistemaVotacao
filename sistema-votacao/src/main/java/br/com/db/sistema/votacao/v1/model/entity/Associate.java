@@ -2,6 +2,7 @@ package br.com.db.sistema.votacao.v1.model.entity;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import br.com.db.sistema.votacao.v1.model.dto.AssociateDTO;
 import br.com.db.sistema.votacao.v1.model.enums.AssociateStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,9 +12,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table( name = "tb_associate" )
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Associate
 {
     @Id
@@ -30,43 +37,11 @@ public class Associate
     @Enumerated( EnumType.STRING )
     private AssociateStatusEnum associateStatusEnum;
 
-    public Long getId() 
+    public Associate( AssociateDTO associateDTO )
     {
-        return id;
-    }
-
-    public void setId( Long id ) 
-    {
-        this.id = id;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-
-    public void setName( String name ) 
-    {
-        this.name = name;
-    }
-
-    public String getCpf() 
-    {
-        return cpf;
-    }
-
-    public void setCpf( String cpf ) 
-    {
-        this.cpf = cpf;
-    }
-
-    public AssociateStatusEnum getStatus() 
-    {
-        return associateStatusEnum;
-    }
-
-    public void setStatus( AssociateStatusEnum associateStatusEnum ) 
-    {
-        this.associateStatusEnum = associateStatusEnum;
+        this.id = associateDTO.getId();
+        this.name = associateDTO.getName();
+        this.cpf = associateDTO.getCpf();
+        this.associateStatusEnum = associateDTO.getStatus();
     }
 }

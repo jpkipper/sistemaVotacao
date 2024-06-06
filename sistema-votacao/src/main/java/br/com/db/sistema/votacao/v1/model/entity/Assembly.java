@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.db.sistema.votacao.v1.model.dto.AssemblyDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,9 +14,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table( name = "tb_assembly" )
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Assembly 
 {
     @Id
@@ -30,43 +37,11 @@ public class Assembly
             @JoinColumn( name = "agenda_id", referencedColumnName = "id" ) } )
     private List<Agenda> agendas = new ArrayList<>();
 
-    public Long getId() 
+    public Assembly( AssemblyDTO assemblyDTO, List<Agenda> agendas )
     {
-        return id;
-    }
-
-    public void setId( Long id ) 
-    {
-        this.id = id;
-    }
-
-    public LocalDateTime getStart() 
-    {
-        return start;
-    }
-
-    public void setStart( LocalDateTime start ) 
-    {
-        this.start = start;
-    }
-
-    public LocalDateTime getEnd() 
-    {
-        return end;
-    }
-
-    public void setEnd( LocalDateTime end ) 
-    {
-        this.end = end;
-    }
-
-    public List<Agenda> getAgendas()
-    {
-        return agendas;
-    }
-
-    public void setAgendas( List<Agenda> agendas )
-    {
+        this.id = assemblyDTO.getId();
+        this.start = assemblyDTO.getStart();
+        this.end = assemblyDTO.getEnd();
         this.agendas = agendas;
     }
 }

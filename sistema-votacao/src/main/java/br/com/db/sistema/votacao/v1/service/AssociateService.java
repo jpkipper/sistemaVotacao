@@ -33,7 +33,7 @@ public class AssociateService
         associate.setId( associateDTO.getId() );
         associate.setCpf( cpf );
         associate.setName( associateDTO.getName() );
-        associate.setStatus( associateDTO.getStatus() );
+        associate.setAssociateStatusEnum( associateDTO.getStatus() );
 
         associateRepository.save( associate );
     }
@@ -46,7 +46,7 @@ public class AssociateService
         associateDTO.setId( associate.getId() );
         associateDTO.setName( associate.getName() );
         associateDTO.setCpf( cpf );
-        associateDTO.setStatus( associate.getStatus() );
+        associateDTO.setStatus( associate.getAssociateStatusEnum() );
 
         return associateDTO;
     }

@@ -3,6 +3,7 @@ package br.com.db.sistema.votacao.v1.model.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import br.com.db.sistema.votacao.v1.model.dto.AgendaDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,9 +14,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table( name = "tb_agenda" )
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Agenda 
 {
     @Id
@@ -33,53 +40,12 @@ public class Agenda
     private LocalDateTime start;
     private LocalDateTime end;
 
-    public Long getId() 
+    public Agenda( AgendaDTO agendaDTO, List<Vote> votes )
     {
-        return id;
-    }
-
-    public void setId( Long id ) 
-    {
-        this.id = id;
-    }
-
-    public String getDescription() 
-    {
-        return description;
-    }
-
-    public void setDescription( String description ) 
-    {
-        this.description = description;
-    }
-
-    public List<Vote> getVotes() 
-    {
-        return votes;
-    }
-
-    public void setVotes( List<Vote> votes ) 
-    {
+        this.id = agendaDTO.getId();
+        this.description = agendaDTO.getDescription();
+        this.start = agendaDTO.getStart();
+        this.end = agendaDTO.getEnd();
         this.votes = votes;
-    }
-
-    public LocalDateTime getStart() 
-    {
-        return start;
-    }
-
-    public void setStart( LocalDateTime start ) 
-    {
-        this.start = start;
-    }
-
-    public LocalDateTime getEnd() 
-    {
-        return end;
-    }
-
-    public void setEnd( LocalDateTime end ) 
-    {
-        this.end = end;
     }
 }

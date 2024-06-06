@@ -1,5 +1,6 @@
 package br.com.db.sistema.votacao.v1.model.entity;
 
+import br.com.db.sistema.votacao.v1.model.dto.VoteDTO;
 import br.com.db.sistema.votacao.v1.model.enums.VoteEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -12,9 +13,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table( name = "tb_vote" )
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Vote
 {
     @Id
@@ -33,43 +40,11 @@ public class Vote
     @Enumerated( EnumType.STRING )
     private VoteEnum value;
 
-    public Long getId() 
+    public Vote( VoteDTO voteDTO, Associate associate, Agenda agenda )
     {
-        return id;
-    }
-
-    public void setId( Long id ) 
-    {
-        this.id = id;
-    }
-
-    public Agenda getAgenda() 
-    {
-        return agenda;
-    }
-
-    public void setAgenda( Agenda agenda ) 
-    {
+        this.id = voteDTO.getId();
         this.agenda = agenda;
-    }
-
-    public Associate getAssociate() 
-    {
-        return associate;
-    }
-
-    public void setAssociate( Associate associate ) 
-    {
         this.associate = associate;
-    }
-
-    public VoteEnum getValue() 
-    {
-        return value;
-    }
-
-    public void setValue( VoteEnum value ) 
-    {
-        this.value = value;
+        this.value = voteDTO.getStatus();
     }
 }

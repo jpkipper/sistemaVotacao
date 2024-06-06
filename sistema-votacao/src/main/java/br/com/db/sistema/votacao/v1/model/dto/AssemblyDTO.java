@@ -3,6 +3,17 @@ package br.com.db.sistema.votacao.v1.model.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.google.gson.Gson;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
 public class AssemblyDTO
 {
     private Long id;
@@ -10,61 +21,11 @@ public class AssemblyDTO
 	private LocalDateTime end;
 	List<AgendaDTO> agendas;
 
-	public AssemblyDTO( Long id, LocalDateTime start, LocalDateTime end, List<AgendaDTO> agendas ) 
-	{
-		this.id = id;
-		this.start = start;
-		this.end = end;
-		this.agendas = agendas;
-	}
-
-	public AssemblyDTO()
-	{
-	}
-
-	public Long getId()
-	{
-		return id;
-	}
-
-	public void setId( Long id )
-	{
-		this.id = id;
-	}
-
-	public LocalDateTime getStart()
-	{
-		return start;
-	}
-
-	public void setStart( LocalDateTime start )
-	{
-		this.start = start;
-	}
-
-	public LocalDateTime getEnd()
-	{
-		return end;
-	}
-
-	public void setEnd( LocalDateTime end )
-	{
-		this.end = end;
-	}
-
-	public List<AgendaDTO> getAgendas()
-	{
-		return agendas;
-	}
-
-	public void setAgendas( List<AgendaDTO> agendas )
-	{
-		this.agendas = agendas;
-	}
-
 	@Override
 	public String toString()
 	{
-		return "AssemblyDTO [id=" + id + ", start=" + start + ", end=" + end + ", agendas=" + agendas + "]";
+		// return "AssemblyDTO [id=" + id + ", start=" + start + ", end=" + end + ", agendas=" + agendas + "]";
+		Gson gson = new Gson();
+        return gson.toJson( this );
 	}
 }

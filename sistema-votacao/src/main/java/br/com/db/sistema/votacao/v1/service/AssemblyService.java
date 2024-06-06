@@ -34,12 +34,6 @@ public class AssemblyService
 
     private Assembly convertToAssembly( AssemblyDTO assemblyDTO )
     {
-        Assembly assembly = new Assembly();
-
-        assembly.setId(assemblyDTO.getId());
-        assembly.setStart(assemblyDTO.getStart());
-        assembly.setEnd(assemblyDTO.getEnd());
-
         List<Agenda> agendas = assemblyDTO.getAgendas().stream()
             .map(x -> {
                Agenda a = new Agenda();
@@ -47,7 +41,7 @@ public class AssemblyService
             })
             .collect(Collectors.toList());
 
-        assembly.setAgendas( agendas );
+        Assembly assembly = new Assembly( assemblyDTO, agendas );
 
         return assembly;
     }
@@ -81,7 +75,7 @@ public class AssemblyService
             .collect(Collectors.toList());  
     }
 
-    protected Assembly findByID( Long id ) throws Exception
+    protected Assembly findById( Long id ) throws Exception
     {
         Optional<Assembly> assembly = assemblyRepository.findById( id );
 

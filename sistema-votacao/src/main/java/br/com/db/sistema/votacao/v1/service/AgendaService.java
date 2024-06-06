@@ -28,7 +28,7 @@ public class AgendaService
     {
         validateDate( agendaDTO.getStart(), agendaDTO.getEnd() );
         
-        Assembly assembly = assemblyService.findByID( agendaDTO.getAssemblyId() );
+        Assembly assembly = assemblyService.findById( agendaDTO.getAssemblyId() );
         validateDate( assembly.getStart(), assembly.getEnd() );
 
         Agenda agenda = convertToAgenda( agendaDTO );
@@ -38,28 +38,9 @@ public class AgendaService
         save( agenda );
     }
 
-    private Agenda convertToAgenda( AgendaDTO agendaDTO )
-    {
-        Agenda agenda = new Agenda();
-
-        agenda.setId( agendaDTO.getId() );
-        agenda.setDescription( agendaDTO.getDescription() );
-        agenda.setStart( agendaDTO.getStart() );
-        agenda.setEnd( agendaDTO.getEnd() );
-
-        return agenda;
-    }
-
-    private AgendaDTO convertToAgendaDTO( Agenda agenda )
-    {
-        AgendaDTO agendaDTO = new AgendaDTO();
-
-        agendaDTO.setId( agenda.getId() );
-        agendaDTO.setDescription( agenda.getDescription() );
-        agendaDTO.setStart( agenda.getStart() );
-        agendaDTO.setEnd( agenda.getEnd() );
-
-        return agendaDTO;
+    public AgendaDTO findDTOById( Long id ) throws Exception
+    {       
+        return convertToAgendaDTO( findById( id ) );
     }
 
     public Agenda findById( Long id ) throws Exception
@@ -86,6 +67,30 @@ public class AgendaService
     protected Agenda save( Agenda agenda )
     {
         return agendaRepository.save( agenda );
+    }
+
+    private Agenda convertToAgenda( AgendaDTO agendaDTO )
+    {
+        Agenda agenda = new Agenda();
+
+        agenda.setId( agendaDTO.getId() );
+        agenda.setDescription( agendaDTO.getDescription() );
+        agenda.setStart( agendaDTO.getStart() );
+        agenda.setEnd( agendaDTO.getEnd() );
+
+        return agenda;
+    }
+
+    private AgendaDTO convertToAgendaDTO( Agenda agenda )
+    {
+        AgendaDTO agendaDTO = new AgendaDTO();
+
+        agendaDTO.setId( agenda.getId() );
+        agendaDTO.setDescription( agenda.getDescription() );
+        agendaDTO.setStart( agenda.getStart() );
+        agendaDTO.setEnd( agenda.getEnd() );
+
+        return agendaDTO;
     }
 
     private void validateDate( LocalDateTime start, LocalDateTime end ) throws Exception
