@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class Assembly
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long id;
+
     private LocalDateTime start;
     private LocalDateTime end;
 

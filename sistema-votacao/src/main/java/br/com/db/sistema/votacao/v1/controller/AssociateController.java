@@ -47,8 +47,4 @@ public class AssociateController
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
-    
 }

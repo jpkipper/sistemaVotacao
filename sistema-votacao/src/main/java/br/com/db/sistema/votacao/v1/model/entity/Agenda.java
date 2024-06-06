@@ -33,7 +33,7 @@ public class Agenda
     private String description;
 
     @OneToMany( cascade = CascadeType.ALL )
-	@JoinTable( name = "pauta_votacao", joinColumns = {
+	@JoinTable( name = "agenda_votation", joinColumns = {
 			@JoinColumn( name = "agenda_id", referencedColumnName = "id" )}, inverseJoinColumns = {
 			@JoinColumn( name = "votes_id", referencedColumnName = "id" ) } )
     private List<Vote> votes;
