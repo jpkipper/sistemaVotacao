@@ -28,20 +28,20 @@ public class VoteService
 
     public void saveVote(VoteDTO voteDTO) throws Exception
     {
-        String cpf = voteDTO.getAssociate().getCpf();
-        Associate associate = validateAssociate(cpf);
-        Agenda agenda = validateAgenda( voteDTO.getAgenda().getId() );
-        
-        if( hasVoted(associate.getId(), agenda.getId() ) )
-        {
-            throw new BadRequestException("Associate has already voted on this agenda");
-        }
+            String cpf = voteDTO.getAssociate().getCpf();
+            Associate associate = validateAssociate(cpf);
+            Agenda agenda = validateAgenda( voteDTO.getAgenda().getId() );
 
-        Vote vote = new Vote(voteDTO, associate, agenda);
+            if( hasVoted(associate.getId(), agenda.getId() ) )
+            {
+                throw new BadRequestException("Associate has already voted on this agenda");
+            }
 
-        agenda.addVoto( vote );
-        voteRepository.save(vote);
-        agendaService.save(agenda);
+            Vote vote = new Vote(voteDTO, associate, agenda);
+
+            agenda.addVoto( vote );
+            voteRepository.save(vote);
+            agendaService.save(agenda);
     }
 
     private Associate validateAssociate(String cpf) throws Exception

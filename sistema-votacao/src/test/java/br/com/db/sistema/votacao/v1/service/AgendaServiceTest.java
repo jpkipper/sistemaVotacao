@@ -28,14 +28,14 @@ import br.com.db.sistema.votacao.v1.repository.AgendaRepository;
 @ExtendWith(MockitoExtension.class)
 public class AgendaServiceTest
 {
+    @InjectMocks
+    private AgendaService agendaService;
+    
     @Mock
     private AgendaRepository agendaRepository;
 
     @Mock
     private AssemblyService assemblyService;
-
-    @InjectMocks
-    private AgendaService agendaService;
 
     private Agenda agenda;
     private AgendaDTO agendaDTO;
@@ -64,7 +64,7 @@ public class AgendaServiceTest
     }
 
     @Test
-    void testCreateAgenda_Success() throws Exception
+    void shouldCreateAgenda_Success() throws Exception
     {
         agendaDTO.setAssemblyId(1L);
         agendaDTO.setDescription("Test Description");
@@ -78,7 +78,7 @@ public class AgendaServiceTest
     }
 
     @Test
-    void testCreateAgenda_InvalidDates()
+    void shouldCreateAgenda_InvalidDates()
     {
         AgendaDTO agendaDTO = AgendaStub.createAgendaDTOWithWrongDates();
         // agendaDTO.setStart(LocalDateTime.now().minusDays(1));
@@ -91,7 +91,7 @@ public class AgendaServiceTest
     }
 
     @Test
-    void testFindById_NotFound()
+    void shouldFindById_NotFound()
     {
         when(agendaRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -103,7 +103,7 @@ public class AgendaServiceTest
     }
 
     @Test
-    void testFindDTOById_Success() throws Exception
+    void shouldFindDTOById_Success() throws Exception
     {
         Agenda agenda = AgendaStub.createAgendaWithId();
         when(agendaRepository.findById(1L)).thenReturn(Optional.of(agenda));
@@ -115,7 +115,7 @@ public class AgendaServiceTest
     }
 
     @Test
-    void testFindDTOById_NotFound()
+    void shouldFindDTOById_NotFound()
     {
         when(agendaRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
@@ -123,7 +123,7 @@ public class AgendaServiceTest
     }
 
     @Test
-    void testFindAll()
+    void shouldFindAll()
     {
         List<Agenda> agendas = List.of(AgendaStub.createAgendaWithId());
         
