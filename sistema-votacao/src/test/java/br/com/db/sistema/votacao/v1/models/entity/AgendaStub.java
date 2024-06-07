@@ -12,8 +12,8 @@ public class AgendaStub
         Agenda agenda = Agenda.builder()
                             .id( 1L )
                             .description( "Agenda Test" )
-                            .start( LocalDateTime.now() )
-                            .end( LocalDateTime.now().plusMinutes( 1 ) )
+                            .start( LocalDateTime.now().plusDays( 1 ) )
+                            .end( LocalDateTime.now().plusDays( 2 ) )
                             .build();
         return agenda;
     }
@@ -28,13 +28,26 @@ public class AgendaStub
         return agenda;
     }
 
+    public static AgendaDTO createAgendaDTOWithtId()
+    {
+        AgendaDTO agendaDTO = AgendaDTO.builder()
+                            .id( 1L )
+                            .description("Agenda Test")
+                            .assemblyId( 1L )
+                            .start( LocalDateTime.now().plusDays( 1 ) )
+                            .end( LocalDateTime.now().plusDays( 2 ) )
+                            .build();
+
+        return agendaDTO;
+    }
+
     public static AgendaDTO createAgendaDTOWithoutId()
     {
         AgendaDTO agendaDTO = AgendaDTO.builder()
                             .description("Agenda Test")
                             .assemblyId( 1L )
-                            .start( LocalDateTime.now() )
-                            .end( LocalDateTime.now().plusMinutes( 1 ) )
+                            .start( LocalDateTime.now().plusDays( 1 ) )
+                            .end( LocalDateTime.now().plusDays( 2 ) )
                             .build();
 
         return agendaDTO;

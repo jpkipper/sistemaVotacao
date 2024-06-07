@@ -1,6 +1,7 @@
 package br.com.db.sistema.votacao.v1.model.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.db.sistema.votacao.v1.model.dto.AgendaDTO;
@@ -38,7 +39,7 @@ public class Agenda
 	@JoinTable( name = "agenda_votation", joinColumns = {
 			@JoinColumn( name = "agenda_id", referencedColumnName = "id" )}, inverseJoinColumns = {
 			@JoinColumn( name = "votes_id", referencedColumnName = "id" ) } )
-    private List<Vote> votes;
+    private List<Vote> votes = new ArrayList<Vote>();
     private LocalDateTime start;
     private LocalDateTime end;
 
@@ -49,5 +50,10 @@ public class Agenda
         this.start = agendaDTO.getStart();
         this.end = agendaDTO.getEnd();
         this.votes = votes;
+    }
+
+    public void addVoto( Vote vote )
+    {
+        this.votes.add( vote );
     }
 }

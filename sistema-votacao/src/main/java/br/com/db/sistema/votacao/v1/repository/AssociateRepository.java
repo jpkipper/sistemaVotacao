@@ -11,4 +11,5 @@ import br.com.db.sistema.votacao.v1.model.entity.Associate;
 public interface AssociateRepository extends JpaRepository<Associate, Long>
 {
     Optional<Associate> findByCpf(String cpf);
+    boolean existsByCpf( String cpf );
 }

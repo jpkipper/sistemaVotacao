@@ -6,11 +6,11 @@ import br.com.db.sistema.votacao.v1.model.entity.Assembly;
 
 public class AssemblyStub
 {
-        public static Assembly createAssemblyWithoutId()
+    public static Assembly createAssemblyWithoutId()
     {
         Assembly assembly = Assembly.builder()
-                                    .start( LocalDateTime.now() )
-                                    .end( LocalDateTime.now().plusDays( 1 ))
+                                    .start( LocalDateTime.now().plusMinutes( 1 ) )
+                                    .end( LocalDateTime.now().plusMinutes( 1 ))
                                     .build();
 
         return assembly;
@@ -19,7 +19,7 @@ public class AssemblyStub
     public static Assembly createAssemblyWithWrongDates()
     {
         Assembly assembly = Assembly.builder()
-                                    .start( LocalDateTime.now().minusDays( 1 ))
+                                    .start( LocalDateTime.now().minusDays( 1 ) )
                                     .end( LocalDateTime.now() )
                                     .build();
 
@@ -30,8 +30,8 @@ public class AssemblyStub
     {
         Assembly assembly = Assembly.builder()
                                     .id( 1L )
-                                    .start( LocalDateTime.now() )
-                                    .end( LocalDateTime.now().plusDays( 1 ))
+                                    .start( LocalDateTime.now().plusMinutes( 1 ) )
+                                    .end( LocalDateTime.now().plusMinutes( 2 ) )
                                     .build();
 
         return assembly;
@@ -42,7 +42,7 @@ public class AssemblyStub
         Assembly assembly = Assembly.builder()
                                     .id( 1L )
                                     .start( LocalDateTime.now() )
-                                    .end( LocalDateTime.now().minusDays( 1 ))
+                                    .end( LocalDateTime.now().minusDays( 1 ) )
                                     .build();
 
         return assembly;

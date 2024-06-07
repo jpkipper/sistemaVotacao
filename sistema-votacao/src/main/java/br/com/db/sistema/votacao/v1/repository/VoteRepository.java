@@ -8,4 +8,5 @@ import br.com.db.sistema.votacao.v1.model.entity.Vote;
 @Repository
 public interface VoteRepository extends JpaRepository<Vote, Long>
 {
+    boolean existsByAssociateIdAndAgendaId( Long associateId, Long agendaId );
 }

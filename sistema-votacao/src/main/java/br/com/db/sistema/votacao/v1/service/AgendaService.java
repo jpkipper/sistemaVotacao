@@ -1,5 +1,7 @@
 package br.com.db.sistema.votacao.v1.service;
 
+import static java.time.LocalDateTime.now;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -7,22 +9,20 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import br.com.db.sistema.votacao.v1.exception.exceptions.BadRequestException;
+import br.com.db.sistema.votacao.v1.exception.exceptions.NotFoundException;
 import br.com.db.sistema.votacao.v1.model.dto.AgendaDTO;
 import br.com.db.sistema.votacao.v1.model.entity.Agenda;
 import br.com.db.sistema.votacao.v1.model.entity.Assembly;
 import br.com.db.sistema.votacao.v1.repository.AgendaRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AgendaService
 {
     private final AgendaRepository agendaRepository;
     private final AssemblyService assemblyService;
-
-    public AgendaService( AgendaRepository agendaRepository, AssemblyService assemblyService )
-    {
-        this.agendaRepository = agendaRepository;
-        this.assemblyService = assemblyService;
-    }
 
     public void createAgenda( AgendaDTO agendaDTO ) throws Exception
     {
@@ -47,9 +47,9 @@ public class AgendaService
     {
         Optional<Agenda> agenda = agendaRepository.findById( id );
 
-        if( agenda.isEmpty() )
+        if( !agenda.isPresent() )
         {
-            throw new Exception( "Agenda with the id: " + id + " not found!" );
+            throw new NotFoundException( "Agenda with the id: " + id + " not found!" );
         }
         
         return agenda.get();
@@ -95,10 +95,7 @@ public class AgendaService
 
     private void validateDate( LocalDateTime start, LocalDateTime end ) throws Exception
     {
-        if (end.isBefore(start)) 
-            throw new Exception("End date cannot be before start date");
-
-        if( start.isBefore( LocalDateTime.now() ) ) 
-            throw new Exception("Start date cannot be in the past");
+        if( end.isBefore( start ) || start.isBefore( now() ) )
+            throw new BadRequestException("Data inicio não pode ser superior a data fim e inferior a data atual");
     }
 }

@@ -30,7 +30,4 @@ public class VoteController
             return ResponseEntity.badRequest().body( e.getMessage() );
         }
     }
-
-
-    
 }

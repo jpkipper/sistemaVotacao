@@ -1,0 +1,10 @@
+delete from assembly_agenda;
+delete from tb_assembly;
+ALTER TABLE tb_assembly AUTO_INCREMENT = 1;
+delete from agenda_votation;
+delete from tb_vote;
+ALTER TABLE tb_vote AUTO_INCREMENT = 1;
+delete from tb_associate;
+ALTER TABLE tb_associate AUTO_INCREMENT = 1;
+delete from tb_agenda;
+ALTER TABLE tb_agenda AUTO_INCREMENT = 1;
