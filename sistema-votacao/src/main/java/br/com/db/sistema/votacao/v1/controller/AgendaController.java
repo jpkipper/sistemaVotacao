@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.db.sistema.votacao.config.swaggers.AgendaSwagger;
 import br.com.db.sistema.votacao.v1.model.dto.AgendaDTO;
 import br.com.db.sistema.votacao.v1.service.AgendaService;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,8 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 public class AgendaController
+    implements 
+        AgendaSwagger
 {
     private final AgendaService agendaService;
 
@@ -29,7 +32,7 @@ public class AgendaController
             agendaService.createAgenda( agendaDTO );
             return ResponseEntity.ok( "Agenda created successfully" );
         } 
-        catch(Exception e)
+        catch( Exception e )
         {
             return ResponseEntity.badRequest().body( e.getMessage() );
         }
@@ -40,7 +43,8 @@ public class AgendaController
     {
         try 
         {
-            return ResponseEntity.ok( agendaService.findDTOById( id ) );
+            AgendaDTO agendaDTO = agendaService.findDTOById(id);
+            return ResponseEntity.ok(agendaDTO);
         } 
         catch(Exception e) 
         {

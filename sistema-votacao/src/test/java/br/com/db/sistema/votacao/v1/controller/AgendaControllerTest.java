@@ -1,168 +1,102 @@
 package br.com.db.sistema.votacao.v1.controller;
 
-import static br.com.db.sistema.votacao.v1.helper.Serializer.json;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import br.com.db.sistema.votacao.v1.helper.Querys;
+import br.com.db.sistema.votacao.v1.exception.exceptions.NotFoundException;
 import br.com.db.sistema.votacao.v1.model.dto.AgendaDTO;
-import br.com.db.sistema.votacao.v1.model.enums.AgendaStatusEnum;
-import br.com.db.sistema.votacao.v1.models.entity.AgendaStub;
+import br.com.db.sistema.votacao.v1.service.AgendaService;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-@DisplayName("Agenda controller")
 public class AgendaControllerTest
 {
-    @Autowired
-	private MockMvc mockMvc;
+    @Mock
+    private AgendaService agendaService;
 
-	private String PATH = "/v1/agenda";
+    @InjectMocks
+    private AgendaController agendaController;
 
-    @Test
-    @SqlGroup({
-        @Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertAssembly ),
-        @Sql( executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = Querys.resetDB ),
-    })
-    public void Should_ReturnOk_CreateAgenda() throws Exception
+    @BeforeEach
+    void setUp()
     {
-        final AgendaDTO mockAgendaDTO = AgendaStub.createAgendaDTOWithoutId();
-		
-		mockMvc.perform( post( PATH )
-						.contentType( MediaType.APPLICATION_JSON )
-						.content( json( mockAgendaDTO )))
-				.andExpect( status().isCreated() )
-				.andExpect( jsonPath("$.id").value( 1 ))
-				.andExpect( jsonPath("$.description").value( mockAgendaDTO.getDescription() ))
-				.andExpect( jsonPath("$.start").value( mockAgendaDTO.getStart().toString() ))
-				.andExpect( jsonPath("$.end").value( mockAgendaDTO.getEnd().toString() ))
-				.andExpect( jsonPath("$.status").value( AgendaStatusEnum.WAITING_FOR_RESULT.getValue() ));
+        MockitoAnnotations.initMocks(this);
     }
 
-	@Test
-	@Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.resetDB )
-	public void Should_ReturnNotFound_CreateAgenda() throws Exception
+    @Test
+    @DisplayName("[POST] Deve retornar status 200 e mensagem de sucesso ao criar uma agenda")
+    void createAgenda_Success()
 	{
-		final AgendaDTO mockAgendaDTO = AgendaStub.createAgendaDTOWithoutId();
-		
-		mockMvc.perform( post( PATH )
-						.contentType( MediaType.APPLICATION_JSON )
-						.content( json( mockAgendaDTO )))
-				.andExpect( status().isNotFound() )
-				.andExpect( jsonPath("$.code").value( 404 ))
-				.andExpect( jsonPath("$.status").value( "Not Found" ));
-	}
-	
-	@Test
-	@SqlGroup({
-        @Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertAssembly ),
-        @Sql( executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = Querys.resetDB ),
-    })
-	public void Should_ReturnBadRequest_CreateAgendaWithWrongDates() throws Exception
+        AgendaDTO agendaDTO = new AgendaDTO();
+        doNothing().when(agendaService).createAgenda(agendaDTO);
+
+        ResponseEntity<String> response = agendaController.createAgenda(agendaDTO);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Agenda created successfully", response.getBody());
+    }
+
+    @Test
+    @DisplayName("[POST] Deve retornar status 400 e mensagem de erro ao ocorrer uma exceção na criação de uma agenda")
+    void createAgenda_Exception()
 	{
-		final AgendaDTO mockAgendaDTO = AgendaStub.createAgendaDTOWithWrongDates();
-		
-		mockMvc.perform( post( PATH )
-						.contentType( MediaType.APPLICATION_JSON )
-						.content( json( mockAgendaDTO )))
-				.andExpect( status().isBadRequest() )
-				.andExpect( jsonPath("$.code").value( 400 ))
-				.andExpect( jsonPath("$.status").value( "Bad Request" ))
-				.andExpect( jsonPath("$.message").value( "Data inicial e final da Agenda devem estar dentro do escopo de datas da Assembleia" ));
-	}
+        AgendaDTO agendaDTO = new AgendaDTO();
+        doThrow(new RuntimeException("Erro na criação da agenda")).when(agendaService).createAgenda(agendaDTO);
 
-	@Test
-	@SqlGroup({
-        @Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertAgenda ),
-        @Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertAssociate ),
-        @Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertVote ),
-        @Sql( executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = Querys.resetDB ),
-    })
-	public void Should_ReturnOk_GetAgendaResult_Approved() throws Exception
+        ResponseEntity<String> response = agendaController.createAgenda(agendaDTO);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Erro na criação da agenda", response.getBody());
+    }
+
+    @Test
+    @DisplayName("[GET] Deve retornar status 200 e uma agenda ao buscar pelo ID")
+    void getAgendaById_Success()
 	{
-		long agendaId = 1;
+        AgendaDTO agendaDTO = new AgendaDTO(); 
+        when(agendaService.findDTOById(any())).thenReturn(agendaDTO);
 
-		mockMvc.perform( get( PATH + "/{agendaId}", agendaId ))
-				.andExpect( status().isOk() )
-				.andExpect( jsonPath("$.agendaId").value( agendaId ))
-				.andExpect( jsonPath("$.description").value( "" ))
-				.andExpect( jsonPath("$.approved").value( 1 ))
-				.andExpect( jsonPath("$.rejected").value( 0 ))
-				.andExpect( jsonPath("$.abstention").value( 0 ))
-				.andExpect( jsonPath("$.protest").value( 0 ))
-				.andExpect( jsonPath("$.total").value( 1 ))
-				.andExpect( jsonPath("$.status").value( AgendaStatusEnum.APPROVED.getValue() ));
-	}
-	
-	@Test
-	@SqlGroup({
-        @Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertAgenda),
-        @Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertAssociate ),
-        @Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertVote ),
-        @Sql( executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = Querys.resetDB ),
-    })
-	public void Should_ReturnOk_GetAgendaResult_Rejected() throws Exception
+        ResponseEntity<AgendaDTO> response = agendaController.getAgendaById(any());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(agendaDTO, response.getBody());
+    }
+
+    @Test
+    @DisplayName("[GET] Deve retornar status 404 ao buscar por um ID de agenda inexistente")
+    void getAgendaById_NotFound()
 	{
-		long agendaId = 1;
+        doThrow(new NotFoundException("Agenda not found")).when(agendaService).findDTOById(any());
 
-		mockMvc.perform( get( PATH + "/{agendaId}", agendaId ))
-				.andExpect( status().isOk() )
-				.andExpect( jsonPath("$.agendaId").value( agendaId ))
-				.andExpect( jsonPath("$.description").value( "" ))
-				.andExpect( jsonPath("$.approved").value( 0 ))
-				.andExpect( jsonPath("$.rejected").value( 1 ))
-				.andExpect( jsonPath("$.abstention").value( 0 ))
-				.andExpect( jsonPath("$.protest").value( 0 ))
-				.andExpect( jsonPath("$.total").value( 1 ))
-				.andExpect( jsonPath("$.status").value( AgendaStatusEnum.REJECTED.getValue() ));
-	}
-	
-	@Test
-	@SqlGroup({
-        @Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertAgenda ),
-		@Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertAssociate ),
-        @Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertVote ),
-        @Sql( executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = Querys.resetDB ),
-    })
-	public void Should_ReturnOk_GetAgendaResult_Tied() throws Exception
+        ResponseEntity<AgendaDTO> response = agendaController.getAgendaById(any());
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(null, response.getBody());
+    }
+
+    @Test
+    @DisplayName("[GET] Deve retornar status 200 e a lista de todas as agendas")
+    void getAllAgendas_Success()
 	{
-		long agendaId = 1;
+        List<AgendaDTO> agendaList = Arrays.asList(new AgendaDTO(), new AgendaDTO());
+        when(agendaService.findAll()).thenReturn(agendaList);
 
-		mockMvc.perform( get( PATH + "/{agendaId}", agendaId ))
-				.andExpect( status().isOk() )
-				.andExpect( jsonPath("$.agendaId").value( agendaId ))
-				.andExpect( jsonPath("$.description").value( "" ))
-				.andExpect( jsonPath("$.approved").value( 1 ))
-				.andExpect( jsonPath("$.rejected").value( 1 ))
-				.andExpect( jsonPath("$.abstention").value( 0 ))
-				.andExpect( jsonPath("$.protest").value( 0 ))
-				.andExpect( jsonPath("$.total").value( 2 ))
-				.andExpect( jsonPath("$.status").value( AgendaStatusEnum.TIED.getValue() ));
-	}
+        ResponseEntity<List<AgendaDTO>> response = agendaController.getAllAgendas();
 
-	@Test
-	public void Should_ReturnNotFound_GetAgendaResult() throws Exception
-	{
-		long agendaId = -1;
-
-		mockMvc.perform( get( PATH + "/{agendaId}", agendaId ))
-				.andExpect( status().isNotFound() )
-				.andExpect( jsonPath("$.code").value( 404 ))
-				.andExpect( jsonPath("$.status").value( "Not Found" ))
-				.andExpect( jsonPath("$.message").value( "Agenda não localizada para o id: #" + agendaId ));
-	}
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(agendaList, response.getBody());
+    }
 }

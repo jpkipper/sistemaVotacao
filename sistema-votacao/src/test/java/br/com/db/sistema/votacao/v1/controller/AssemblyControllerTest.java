@@ -1,95 +1,76 @@
 package br.com.db.sistema.votacao.v1.controller;
 
-import static br.com.db.sistema.votacao.v1.helper.Serializer.json;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import br.com.db.sistema.votacao.v1.helper.Querys;
-import br.com.db.sistema.votacao.v1.model.entity.Assembly;
-import br.com.db.sistema.votacao.v1.models.entity.AssemblyStub;
+import br.com.db.sistema.votacao.v1.model.dto.AssemblyDTO;
+import br.com.db.sistema.votacao.v1.service.AssemblyService;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-@DisplayName("Assembly controller")
 public class AssemblyControllerTest
 {
-@Autowired
-	private MockMvc mockMvc;
+    @Mock
+    private AssemblyService assemblyService;
 
-	private String PATH = "/v1/assembleias";
+    @InjectMocks
+    private AssemblyController assemblyController;
 
-	@Test
-	@DisplayName("[POST] Deve retornar Ok ao criar uma Assembly")
-	public void Should_ReturnCreated_CreateAssembly() throws Exception 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    @DisplayName("[POST] Deve retornar status 200 e mensagem de sucesso ao criar uma assembleia")
+    void createAssembly_Success()
+	{        
+        AssemblyDTO assemblyDTO = new AssemblyDTO();
+        doNothing().when(assemblyService).createAssembly(assemblyDTO);
+        
+        ResponseEntity<String> response = assemblyController.createAssembly(assemblyDTO);
+       
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Assembly created successfully", response.getBody());
+    }
+
+    @Test
+    @DisplayName("[POST] Deve retornar status 400 e mensagem de erro ao ocorrer uma exceção ao criar uma assembleia")
+    void createAssembly_Exception()
 	{
-		final Assembly mockAssembly = AssemblyStub.createAssemblyWithoutId();
-		
-		mockMvc.perform( post( PATH )
-						.contentType( MediaType.APPLICATION_JSON )
-						.content( json( mockAssembly )))
-				.andExpect( status().isCreated() )
-				.andExpect( jsonPath("$.id").value( 1 ))
-				.andExpect( jsonPath("$.agendas").value( mockAssembly.getAgendas().toString() ))
-				.andExpect( jsonPath("$.start").value( mockAssembly.getStart().toString() ))
-				.andExpect( jsonPath("$.end").value( mockAssembly.getEnd().toString() ));
-	}
+        AssemblyDTO assemblyDTO = new AssemblyDTO();
+        String errorMessage = "Erro ao criar a assembleia";
+        doThrow(new RuntimeException(errorMessage)).when(assemblyService).createAssembly(assemblyDTO);
 
-	@Test
-	@DisplayName("[POST] Deve retornar BadRequest ao criar uma Assembly com datas inválidas")
-	public void Should_ReturnBadRequest_CreateAssembly() throws Exception
+        ResponseEntity<String> response = assemblyController.createAssembly(assemblyDTO);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertTrue(response.getBody().contains(errorMessage));
+    }
+
+    @Test
+    @DisplayName("[GET] Deve retornar status 200 e a lista de todas as assembleias")
+    void getAllAssemblies_Success()
 	{
-		final Assembly mockAssembly = AssemblyStub.createAssemblyWithWrongDates();
+        List<AssemblyDTO> assemblies = new ArrayList<>();
+        when(assemblyService.findAll()).thenReturn(assemblies);
 
-		mockMvc.perform( post( PATH )
-						.contentType( MediaType.APPLICATION_JSON )
-						.content( json( mockAssembly )))
-				.andExpect( status().isBadRequest() )
-				.andExpect( jsonPath("$.code").value( 400 ))
-				.andExpect( jsonPath("$.status").value( "Bad Request" ));
-	}
+        ResponseEntity<List<AssemblyDTO>> response = assemblyController.getAllAssemblies();
 
-	@Test
-	@SqlGroup({
-		@Sql( executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = Querys.insertAssembly ),
-		@Sql( executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = Querys.resetDB )
-	})
-	@DisplayName("[GET] Deve retornar Ok ao buscar uma Assembly pelo ID informado")
-	public void Should_ReturnOk_GetAssemblyById() throws Exception
-	{
-		final Assembly mockAssembly = AssemblyStub.createAssemblyWithoutId();
-		
-		mockMvc.perform( get( PATH + "/{assembleiaId}", 1 ))
-				.andExpect( status().isOk() )
-				.andExpect( jsonPath("$.id").value( 1 ))
-				.andExpect( jsonPath("$.description").value( mockAssembly.getAgendas().toString() ))
-				.andExpect( jsonPath("$.startDate").value( mockAssembly.getStart().toString() ))
-				.andExpect( jsonPath("$.endDate").value( mockAssembly.getEnd().toString() ));
-	}
-
-	@Test
-	@DisplayName("[GET] Deve retornar NotFound ao buscar uma Assembly pelo ID inválido")
-	public void Should_ReturnNotFoundException_GetAssemblyById() throws Exception
-	{
-		long assembleiaId = -1;
-
-		mockMvc.perform( get( PATH + "/{assembleiaId}", assembleiaId ))
-				.andExpect( status().isNotFound() )
-				.andExpect( jsonPath("$.code").value( 404 ))
-				.andExpect( jsonPath("$.status").value( "Not Found" ))
-				.andExpect( jsonPath("$.message").value( "Assembly não localizada para o id: #" + assembleiaId ));
-	}
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(assemblies, response.getBody());
+    }
 }

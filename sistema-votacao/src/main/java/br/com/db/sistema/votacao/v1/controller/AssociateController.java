@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.db.sistema.votacao.config.swaggers.AssociateSwagger;
 import br.com.db.sistema.votacao.v1.exception.exceptions.NotFoundException;
 import br.com.db.sistema.votacao.v1.model.dto.AssociateDTO;
 import br.com.db.sistema.votacao.v1.service.AssociateService;
@@ -17,6 +18,8 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 public class AssociateController
+    implements
+        AssociateSwagger
 {
     private final AssociateService associateService;
 

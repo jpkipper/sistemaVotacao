@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.db.sistema.votacao.config.swaggers.VoteSwagger;
 import br.com.db.sistema.votacao.v1.model.dto.VoteDTO;
 import br.com.db.sistema.votacao.v1.service.VoteService;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,8 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 public class VoteController
+    implements
+        VoteSwagger
 {
     private final VoteService voteService;
 

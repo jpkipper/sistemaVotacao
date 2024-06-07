@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.db.sistema.votacao.config.swaggers.AssemblySwagger;
 import br.com.db.sistema.votacao.v1.model.dto.AssemblyDTO;
 import br.com.db.sistema.votacao.v1.service.AssemblyService;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,9 @@ import lombok.AllArgsConstructor;
 @RequestMapping("v1/assembly")
 @AllArgsConstructor
 @RestController
-public class AssemblyController 
+public class AssemblyController
+    implements
+        AssemblySwagger
 {
     private final AssemblyService assemblyService;
 
