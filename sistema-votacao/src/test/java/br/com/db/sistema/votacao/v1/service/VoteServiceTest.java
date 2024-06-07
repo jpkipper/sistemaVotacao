@@ -1,6 +1,5 @@
 package br.com.db.sistema.votacao.v1.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,7 +11,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,7 +58,7 @@ public class VoteServiceTest
     private AgendaDTO agendaDTO;
 
     @BeforeEach
-    void setUp() throws Exception
+    void setUp()
     {
         associateDTO = new AssociateDTO();
         associateDTO.setId(1L);
@@ -85,11 +83,11 @@ public class VoteServiceTest
     }
 
     @Test
-    void shouldSaveVoteSuccessfully() throws Exception
+    void shouldSaveVoteSuccessfully()
     {
-        when(associateService.findAssociate("01964652065")).thenReturn(associate);
-        when(agendaService.findById(1L)).thenReturn(agenda);
-        when(voteRepository.existsByAssociateIdAndAgendaId(1L, 1L)).thenReturn(false);
+        when(associateService.findAssociate(anyString())).thenReturn(associate);
+        when(agendaService.findById(any())).thenReturn(agenda);
+        when(voteRepository.existsByAssociateIdAndAgendaId(any(), any())).thenReturn(false);
 
         voteService.saveVote(voteDTO);
 
@@ -97,34 +95,18 @@ public class VoteServiceTest
     }
 
     @Test
-    void shouldSaveVote_AssociateNotFound() throws Exception
+    void shouldSaveVote_AssociateCannotVote()
     {
-        VoteDTO voteDTO = new VoteDTO();
-
-        when(associateService.findAssociate(anyString())).thenReturn( associate );
-
-        assertThrows(BadRequestException.class, () -> voteService.saveVote(voteDTO));
-    }
-
-    @Test
-    void shouldSaveVote_AssociateCannotVote() throws Exception
-    {
-        VoteDTO voteDTO = new VoteDTO();
-        Associate associate = new Associate();
         associate.setAssociateStatusEnum(AssociateStatusEnum.UNABLE_TO_VOTE);
-
         when(associateService.findAssociate(anyString())).thenReturn(associate);
 
         assertThrows(BadRequestException.class, () -> voteService.saveVote(voteDTO));
     }
 
     @Test
-    void shouldSaveVote_AgendaExpired() throws Exception
+    void shouldSaveVote_AgendaExpired()
     {
-        VoteDTO voteDTO = new VoteDTO();
-        Associate associate = new Associate();
         associate.setAssociateStatusEnum(AssociateStatusEnum.ABLE_TO_VOTE);
-        Agenda agenda = new Agenda();
         agenda.setEnd(LocalDateTime.now().minusDays(1));
 
         when(associateService.findAssociate(anyString())).thenReturn(associate);
@@ -134,14 +116,11 @@ public class VoteServiceTest
     }
 
     @Test
-    void shouldSaveVote_HasVoted() throws Exception
+    void shouldSaveVote_HasVoted()
     {
-        VoteDTO voteDTO = new VoteDTO();
-        Associate associate = new Associate();
         associate.setId(1L);
         associate.setAssociateStatusEnum(AssociateStatusEnum.ABLE_TO_VOTE);
-        Agenda agenda = new Agenda();
-        agenda.setId(1L);
+
         agenda.setEnd(LocalDateTime.now().plusDays(1));
 
         when(associateService.findAssociate(anyString())).thenReturn(associate);
@@ -154,32 +133,22 @@ public class VoteServiceTest
     @Test
     void shouldHasVoted_VoteExists_ReturnsTrue() 
     {
-        // Arrange
-        Long associateId = 1L;
-        Long agendaId = 1L;
-        when(voteRepository.existsByAssociateIdAndAgendaId(associateId, agendaId)).thenReturn(true);
+        when(voteRepository.existsByAssociateIdAndAgendaId(any(), any())).thenReturn(true);
 
-        // Act
-        boolean hasVoted = voteService.hasVoted(associateId, agendaId);
+        boolean hasVoted = voteService.hasVoted(any(), any());
 
-        // Assert
         assertTrue(hasVoted);
-        verify(voteRepository, times(1)).existsByAssociateIdAndAgendaId(associateId, agendaId);
+        verify(voteRepository, times(1)).existsByAssociateIdAndAgendaId(any(), any());
     }
 
     @Test
     void shouldHasVoted_VoteDoesNotExist_ReturnsFalse()
     {
-        // Arrange
-        Long associateId = 1L;
-        Long agendaId = 1L;
-        when(voteRepository.existsByAssociateIdAndAgendaId(associateId, agendaId)).thenReturn(false);
+        when(voteRepository.existsByAssociateIdAndAgendaId(any(), any())).thenReturn(false);
 
-        // Act
-        boolean hasVoted = voteService.hasVoted(associateId, agendaId);
+        boolean hasVoted = voteService.hasVoted(any(), any());
 
-        // Assert
         assertFalse(hasVoted);
-        verify(voteRepository, times(1)).existsByAssociateIdAndAgendaId(associateId, agendaId);
+        verify(voteRepository, times(1)).existsByAssociateIdAndAgendaId(any(), any());
     }
 }

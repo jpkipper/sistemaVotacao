@@ -48,8 +48,8 @@ public class AgendaControllerTest
 				.andExpect( status().isCreated() )
 				.andExpect( jsonPath("$.id").value( 1 ))
 				.andExpect( jsonPath("$.description").value( mockAgendaDTO.getDescription() ))
-				.andExpect( jsonPath("$.startDate").value( mockAgendaDTO.getStart().toString() ))
-				.andExpect( jsonPath("$.endDate").value( mockAgendaDTO.getEnd().toString() ))
+				.andExpect( jsonPath("$.start").value( mockAgendaDTO.getStart().toString() ))
+				.andExpect( jsonPath("$.end").value( mockAgendaDTO.getEnd().toString() ))
 				.andExpect( jsonPath("$.status").value( AgendaStatusEnum.WAITING_FOR_RESULT.getValue() ));
     }
 

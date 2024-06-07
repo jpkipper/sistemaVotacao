@@ -37,7 +37,7 @@ class AssociateServiceTest
     private CpfValidator cpfValidator;
 
     @Test
-    void testCreateAssociate_Success() throws Exception
+    void testCreateAssociate_Success()
     {
         AssociateDTO associateDTO = AssociateStub.createAssociateDTOWithId();
 
@@ -51,7 +51,7 @@ class AssociateServiceTest
     }
 
     @Test
-    void testCreateAssociate_Duplicate() throws Exception
+    void testCreateAssociate_Duplicate()
     {
         AssociateDTO associateDTO = AssociateStub.createAssociateDTOWithId();
 

@@ -24,7 +24,7 @@ public class AgendaService
     private final AgendaRepository agendaRepository;
     private final AssemblyService assemblyService;
 
-    public void createAgenda( AgendaDTO agendaDTO ) throws Exception
+    public void createAgenda( AgendaDTO agendaDTO )
     {
         validateDate( agendaDTO.getStart(), agendaDTO.getEnd() );
         
@@ -38,12 +38,12 @@ public class AgendaService
         save( agenda );
     }
 
-    public AgendaDTO findDTOById( Long id ) throws Exception
+    public AgendaDTO findDTOById( Long id )
     {       
         return convertToAgendaDTO( findById( id ) );
     }
 
-    public Agenda findById( Long id ) throws Exception
+    public Agenda findById( Long id )
     {
         Optional<Agenda> agenda = agendaRepository.findById( id );
 
@@ -93,7 +93,7 @@ public class AgendaService
         return agendaDTO;
     }
 
-    private void validateDate( LocalDateTime start, LocalDateTime end ) throws Exception
+    private void validateDate( LocalDateTime start, LocalDateTime end )
     {
         if( end.isBefore( start ) || start.isBefore( now() ) )
             throw new BadRequestException("Data inicio não pode ser superior a data fim e inferior a data atual");

@@ -64,7 +64,7 @@ public class AgendaServiceTest
     }
 
     @Test
-    void shouldCreateAgenda_Success() throws Exception
+    void shouldCreateAgenda_Success()
     {
         agendaDTO.setAssemblyId(1L);
         agendaDTO.setDescription("Test Description");
@@ -103,7 +103,7 @@ public class AgendaServiceTest
     }
 
     @Test
-    void shouldFindDTOById_Success() throws Exception
+    void shouldFindDTOById_Success()
     {
         Agenda agenda = AgendaStub.createAgendaWithId();
         when(agendaRepository.findById(1L)).thenReturn(Optional.of(agenda));

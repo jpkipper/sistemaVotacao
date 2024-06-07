@@ -64,7 +64,7 @@ public class AssemblyServiceTest
     }
 
     @Test
-    void testCreateAssembly_Success() throws Exception
+    void testCreateAssembly_Success()
     {
         when(assemblyRepository.save(any(Assembly.class))).thenReturn(assembly);
 
@@ -97,7 +97,7 @@ public class AssemblyServiceTest
     }
 
     @Test
-    void testFindById_Success() throws Exception
+    void testFindById_Success()
     {
         when(assemblyRepository.findById(1L)).thenReturn(Optional.of(assembly));
 

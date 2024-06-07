@@ -26,7 +26,7 @@ public class VoteService
     private final AssociateService associateService;
     private final CpfValidator cpfValidator;
 
-    public void saveVote(VoteDTO voteDTO) throws Exception
+    public void saveVote( VoteDTO voteDTO )
     {
             String cpf = voteDTO.getAssociate().getCpf();
             Associate associate = validateAssociate(cpf);
@@ -44,7 +44,7 @@ public class VoteService
             agendaService.save(agenda);
     }
 
-    private Associate validateAssociate(String cpf) throws Exception
+    private Associate validateAssociate(String cpf)
     {
         cpfValidator.isCPFValid(cpf);
         Associate associate = associateService.findAssociate(cpf);
@@ -67,7 +67,7 @@ public class VoteService
         return voteRepository.existsByAssociateIdAndAgendaId( associateId, agendaId );
     }
 
-    private Agenda validateAgenda(Long id) throws Exception
+    private Agenda validateAgenda(Long id)
     {
         Agenda agenda = agendaService.findById(id);
 

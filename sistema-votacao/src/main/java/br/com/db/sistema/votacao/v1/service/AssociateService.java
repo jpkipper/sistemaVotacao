@@ -20,7 +20,7 @@ public class AssociateService
     private final AssociateRepository associateRepository;
     private final CpfValidator cpfValidator;
 
-    public void createAssociate(@NonNull AssociateDTO associateDTO ) throws Exception
+    public void createAssociate(@NonNull AssociateDTO associateDTO )
     {
         String cpf = associateDTO.getCpf();
         cpfValidator.isCPFValid(cpf);

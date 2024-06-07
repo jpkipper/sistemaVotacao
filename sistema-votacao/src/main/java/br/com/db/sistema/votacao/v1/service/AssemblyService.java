@@ -22,7 +22,7 @@ public class AssemblyService
 {
     private final AssemblyRepository assemblyRepository;
 
-    public void createAssembly( AssemblyDTO assemblyDTO ) throws Exception
+    public void createAssembly( AssemblyDTO assemblyDTO )
     {
         validateDate( assemblyDTO.getStart(), assemblyDTO.getEnd() );
         
@@ -74,7 +74,7 @@ public class AssemblyService
             .collect(Collectors.toList());  
     }
 
-    protected Assembly findById( Long id ) throws Exception
+    protected Assembly findById( Long id )
     {
         Optional<Assembly> assembly = assemblyRepository.findById( id );
 
@@ -91,7 +91,7 @@ public class AssemblyService
         return assemblyRepository.save( assembly );
     }
 
-    private void validateDate( LocalDateTime start, LocalDateTime end ) throws Exception
+    private void validateDate( LocalDateTime start, LocalDateTime end )
     {
         if ( end.isBefore( start ) || start.isBefore( LocalDateTime.now() ) )
             throw new BadRequestException("Data inicio não pode ser superior a data fim e inferior a data atual");

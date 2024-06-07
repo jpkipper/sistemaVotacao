@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CpfValidator extends CPFValidator
 {    
-    public void isCPFValid( String cpf ) throws Exception
+    public void isCPFValid( String cpf )
     {
         CPFValidator cpfValidator = new CPFValidator();
         cpfValidator.initialize(null);
@@ -14,6 +14,6 @@ public class CpfValidator extends CPFValidator
         boolean isValid = cpfValidator.isValid(cpf, null);
 
         if( !isValid )
-            throw new Exception( "Invalid CPF ( " + cpf + " )");
+            throw new RuntimeException( "Invalid CPF ( " + cpf + " )");
     }
 }
