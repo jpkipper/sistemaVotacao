@@ -1,7 +1,5 @@
 package br.com.db.sistema.votacao.v1.service;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import br.com.db.sistema.votacao.v1.exception.exceptions.DuplicateObjectException;

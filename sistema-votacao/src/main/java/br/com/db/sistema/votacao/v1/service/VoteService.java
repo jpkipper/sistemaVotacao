@@ -2,8 +2,6 @@ package br.com.db.sistema.votacao.v1.service;
 
 import static java.time.LocalDateTime.now;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import br.com.db.sistema.votacao.v1.exception.exceptions.BadRequestException;
